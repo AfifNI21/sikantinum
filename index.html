@@ -901,6 +901,47 @@
       { id: '#UM-8941', items: 'Nasi Uduk + Rendang Sapi + Es Teh', orderTypeLabel: 'Takeaway (Bungkus)', total: 21500, time: '1 Mnt Lalu', status: 'Dimasak' }
     ];
 
+    // --- NAVIGATION & ROLE SWITCHING LOGIC ---
+    function selectRole(role) {
+      currentRole = role;
+      switchViewLevel(2);
+    }
+
+    function switchViewLevel(level) {
+      currentViewLevel = level;
+      document.getElementById('view-level-1').classList.toggle('hidden', level !== 1);
+      document.getElementById('view-level-2').classList.toggle('hidden', level !== 2);
+      document.getElementById('view-level-3').classList.toggle('hidden', level !== 3);
+
+      const btnBack = document.getElementById('btn-back');
+      const breadcrumbBar = document.getElementById('breadcrumb-bar');
+
+      if (level > 1) {
+        btnBack.classList.remove('hidden');
+        breadcrumbBar.classList.remove('hidden');
+      } else {
+        btnBack.classList.add('hidden');
+        breadcrumbBar.classList.add('hidden');
+      }
+
+      updateHeaderState();
+
+      if (level === 2) renderLevel2();
+      if (level === 3) renderLevel3();
+    }
+
+    function navigateBack() {
+      if (currentViewLevel === 3) {
+        if (currentRole === 'pembeli' && selectedStore) {
+          backToStoreSelection();
+        } else {
+          switchViewLevel(2);
+        }
+      } else if (currentViewLevel === 2) {
+        switchViewLevel(1);
+      }
+    }
+
     // --- ORDER TYPE & TABLE NUMBER HANDLER ---
     function setOrderType(type) {
       currentOrderType = type;
